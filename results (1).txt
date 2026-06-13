@@ -1,2 +1,0 @@
-Predictions	Anemia 
-8.06		['Anemic'] 
