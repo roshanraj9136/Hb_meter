@@ -14,4 +14,4 @@ def start(output_file, timer=5, fps=30):
     record_video()
 
 # Example usage
-start('/home/nishad/output.mp4')
+start('/home/hbmeter1/output.mp4')

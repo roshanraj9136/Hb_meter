@@ -3,7 +3,7 @@ import os,cv2,csv,itertools,subprocess
 
 def button_callback(channel):
     print("Button was pushed!")
-    command=f"python3 /home/nishad/Nishad/Nishad.py"
+    command=f"python3 /home/hbmeter1/Hb_meter/Nishad.py"
     p=subprocess.run(command.split(" "))
     if p.returncode==0:
         print("Finished")

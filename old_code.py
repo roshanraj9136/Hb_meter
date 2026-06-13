@@ -1,4 +1,4 @@
-#!/home/nishad/Nishad_env/bin/python
+#!/home/hbmeter1/Hb_meter_env/bin/python
 
 from tflite_runtime.interpreter import Interpreter 
 import pandas as pd
@@ -13,7 +13,7 @@ import time
 #from AllinOne import predict_lite
 import os
 
-os.chdir("/home/nishad/Nishad/")
+os.chdir("/home/hbmeter1/Hb_meter/")
 
 def unique_file(basename, ext="mkv"):
     actualname = "%s.%s" % (basename, ext)
@@ -321,11 +321,11 @@ def display_on_lcd(pred):
         lcd.clear()
 
 
-#!/home/nishad/Nishad_env/bin/python
+#!/home/hbmeter1/Hb_meter_env/bin/python
 
 import os
 
-os.chdir("/home/nishad/Nishad/")
+os.chdir("/home/hbmeter1/Hb_meter/")
 
 from AllinOne import *
 
@@ -456,12 +456,12 @@ generate_csv(record_path, csv_file)
 display_ongoing()
 generate_average_histogram(csv_file, avg_file)
 
-model = load_lite_model("/home/nishad/Nishad/model_quant.tflite")
+model = load_lite_model("/home/hbmeter1/Hb_meter/model_quant.tflite")
 pred = predict_lite(model, avg_file)
 display_on_lcd(pred)
 
 display_next()
 
-#subprocess.run(["python3", "/home/nishad/Nishad/nishad_switch.py"])
+#subprocess.run(["python3", "/home/hbmeter1/Hb_meter/nishad_switch.py"])
 
 

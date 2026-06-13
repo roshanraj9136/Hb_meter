@@ -1,4 +1,4 @@
-#!/home/nishad/Nishad_env/bin/python
+#!/home/hbmeter1/Hb_meter_env/bin/python
 
 import os
 import time
@@ -8,17 +8,21 @@ from AllinOne import *
 from rpi_lcd import LCD
 import torch
 import logging
-
+from config_utils import load_config, save_config
+CONFIG = load_config()
 # Setup logging
 logging.basicConfig(filename='nishad.log', level=logging.ERROR)
 
 # 🕒 Start measuring total time
 start_time = time.time()
 
-vid_path = "Data/vids/"
-csv_path = "Data/csv_data/"
-hist_path = "Data/histogram/"
+vid_path  = CONFIG['VIDEO_PATH']
+csv_path  = CONFIG['CSV_PATH']
+hist_path = CONFIG['HIST_PATH']
 paths = [vid_path, csv_path, hist_path]
+import subprocess
+from time import sleep
+
 
 def ensure_dirs(paths):
     for p in paths:
@@ -113,13 +117,15 @@ def display_next(lcd):
         pass
 
 # Change directory and prepare paths
-os.chdir("/home/hbmeter/Hb_meter/")
+os.chdir("/home/hbmeter1/Hb_meter/")
 ensure_dirs(paths)
 
 name, record_path = unique_file(vid_path + "record")
+CONFIG['CURRENT_VIDEO'] = record_path
 csv_file = csv_path + name + ".csv"
-
+CONFIG['CURRENT_CSV'] = csv_file
 ensure_writable_path(csv_file)
+save_config(CONFIG)
 
 # Initialize LCD once
 lcd = LCD(address=0x27)  # Replace with your I2C address if different
@@ -189,21 +195,23 @@ try:
 
     try:
         pred = predict_lite(model, name, csv_path)
+        pred*=1.12
     except Exception as e:
         print(f"Error during prediction: {e}")
         logging.error(f"Error during prediction: {e}")
         exit(1)
 
-    # ➕ Show prediction on LCD
+
     try:
         display_on_lcd(pred, lcd)
+        # upload_with_rclone(record_path,"sandy:AIIMS_DATA/",lcd)
     except Exception as e:
         print(f"Error in display_on_lcd: {e}")
         logging.error(f"Error in display_on_lcd: {e}")
         exit(1)
 
     # Final message
-    display_next(lcd)
+    # display_next(lcd)
 
 finally:
     try:
@@ -212,11 +220,11 @@ finally:
         print(f"I2C error on final clear: {e}")
         logging.error(f"I2C error on final clear: {e}")
 
-# 🕒 End measuring total time
+
 end_time = time.time()
 total_time = end_time - start_time
 mins, secs = divmod(total_time, 60)
 print(f"⏱️ Total time taken: {int(mins)} min {secs:.1f} sec")
 
 # Optional: Next process
-# subprocess.run(["python3", "/home/nishad/Nishad/nishad_switch.py"])
+# subprocess.run(["python3", "/home/hbmeter1/Hb_meter/nishad_switch.py"])

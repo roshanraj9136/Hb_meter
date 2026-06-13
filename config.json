@@ -1,0 +1,9 @@
+{
+    "VIDEO_PATH": "Data/vids/",
+    "CSV_PATH": "Data/csv_data/",
+    "HIST_PATH": "Data/histogram/",
+    "CURRENT_VIDEO": "Data/vids/record0.mkv",
+    "CURRENT_CSV": "Data/csv_data/record0.csv",
+    "MODEL_PATH": "best_model_segments.pth",
+    "SWITCH_PIN": 23
+}

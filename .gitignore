@@ -1,0 +1,29 @@
+# Data
+Data/
+*.csv
+*.npy
+
+# Videos
+*.mkv
+*.mp4
+*.avi
+*.mov
+
+# Models
+*.pth
+*.pt
+*.pkl
+*.joblib
+*.h5
+
+# Logs
+*.log
+*.txt
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Misc
+.DS_Store

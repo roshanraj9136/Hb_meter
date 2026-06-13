@@ -1,4 +1,4 @@
-#!/home/nishad/Nishad_env/bin/python
+#!/home/hbmeter1/Hb_meter_env/bin/python
 
 import torch
 import torch.nn as nn
@@ -21,7 +21,7 @@ import logging
 logging.basicConfig(filename='nishad.log', level=logging.ERROR)
 
 # Change working directory
-os.chdir("/home/hbmeter/Hb_meter/")
+os.chdir("/home/hbmeter1/Hb_meter/")
 
 def unique_file(basename, ext="mkv"):
     actualname = "%s.%s" % (basename, ext)
@@ -411,7 +411,7 @@ def predict_lite(model, name, csv_path):
         output = model(x_red, x_orange, x_yellow)
         pred = output.item()
     print(f"Predicted Hemoglobin: {pred:.2f} g/dL")
-    return float(pred)
+    return float(pred)*1.2
 
 def display_on_lcd(pred, lcd):
     def safe_exit(signum, frame):

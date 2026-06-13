@@ -1,8 +1,10 @@
 #!/bin/bash
-#echo "Startup script executed at: $(date)" >> /home/pi/startup.log
+# echo "Startup script executed at: $(date)" >> /home/pi/startup.log
 
-# Activate virtual env
-source /home/nishad/Nishad_env/bin/activate
+# Optional delay (e.g. 5 seconds)
+sleep 10
 
-# Run the python program
-python3 /home/nishad/Nishad/nishad_switch.py
+# Activate virtual environment
+source /home/hbmeter1/Nishad_env/bin/activate
+# Run the Python program
+python3 /home/hbmeter1/Hb_meter/nishad_switch.py

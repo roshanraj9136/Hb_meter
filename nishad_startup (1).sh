@@ -12,7 +12,7 @@
 # Description:       Enable service provided by daemon.
 ### END INIT INFO
 
-sudo python3 /home/nishad/Nishad/nishad_switch.py & > /home/nishad/Nishad/log.txt   
+sudo python3 /home/hbmeter1/Hb_meter/nishad_switch.py & > /home/hbmeter1/Hb_meter/log.txt   
 def led_light():
         # Define the GPIO pins for red, green, and blue
         RED_PIN = 26
