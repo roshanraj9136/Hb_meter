@@ -6,7 +6,6 @@ import pandas as pd
 import numpy as np
 import os
 import cv2
-import csv
 import itertools
 import time
 import subprocess
@@ -318,54 +317,35 @@ def generate_csv(video_path, csv_path, name):
         for segment, (segment_start, segment_end) in segment_ranges.items():
             segment_end = min(segment_end, total_frames)
             segment_start = min(segment_start, segment_end)
-            temp_csv = os.path.join(csv_path, f"{video_name}_{segment}_temp.csv")
-            try:
-                with open(temp_csv, mode="w", newline="") as file:
-                    writer = csv.writer(file)
-                    writer.writerow(["Frame", "R", "G", "B", "H", "S", "V", "L", "A", "Grayscale"])
-                    frame_count = 0
-                    video.set(cv2.CAP_PROP_POS_FRAMES, segment_start)
+            channels = ['R', 'G', 'B', 'H', 'S', 'V', 'L', 'A', 'Grayscale']
+            channel_histograms = {ch: [] for ch in channels}
+            frame_count = 0
+            video.set(cv2.CAP_PROP_POS_FRAMES, segment_start)
 
-                    while frame_count < segment_end - segment_start:
-                        ret, frame = video.read()
-                        if not ret:
-                            break
-                        roi = frame[roi_top:roi_bottom, roi_left:roi_right]
-                        roi_rgb = cv2.cvtColor(roi, cv2.COLOR_BGR2RGB)
-                        roi_hsv = cv2.cvtColor(roi_rgb, cv2.COLOR_RGB2HSV)
-                        roi_lab = cv2.cvtColor(roi_rgb, cv2.COLOR_RGB2LAB)
-                        roi_gray = cv2.cvtColor(roi_rgb, cv2.COLOR_RGB2GRAY)
-                        r, g, b = cv2.split(roi_rgb)
-                        h, s, v = cv2.split(roi_hsv)
-                        l, a, _ = cv2.split(roi_lab)
-                        for i in range(len(r)):
-                            writer.writerow([
-                                frame_count + segment_start,
-                                r[i][0], g[i][0], b[i][0],
-                                h[i][0], s[i][0], v[i][0],
-                                l[i][0], a[i][0], roi_gray[i][0]
-                            ])
-                        frame_count += 1
+            while frame_count < segment_end - segment_start:
+                ret, frame = video.read()
+                if not ret:
+                    break
+                roi = frame[roi_top:roi_bottom, roi_left:roi_right]
+                roi_rgb  = cv2.cvtColor(roi, cv2.COLOR_BGR2RGB)
+                roi_hsv  = cv2.cvtColor(roi_rgb, cv2.COLOR_RGB2HSV)
+                roi_lab  = cv2.cvtColor(roi_rgb, cv2.COLOR_RGB2LAB)
+                roi_gray = cv2.cvtColor(roi_rgb, cv2.COLOR_RGB2GRAY)
+                r, g, b = cv2.split(roi_rgb)
+                h, s, v = cv2.split(roi_hsv)
+                l, a, _ = cv2.split(roi_lab)
+                for ch_name, ch_data in zip(channels, [r, g, b, h, s, v, l, a, roi_gray]):
+                    hist, _ = np.histogram(ch_data.flatten(), bins=256, range=(0, 256), density=True)
+                    channel_histograms[ch_name].append(hist)
+                frame_count += 1
 
-                df = pd.read_csv(temp_csv) if os.path.exists(temp_csv) else pd.DataFrame()
-                channels = ['R', 'G', 'B', 'H', 'S', 'V', 'L', 'A', 'Grayscale']
-                histograms = {}
-                for channel in channels:
-                    channel_histograms = []
-                    for frame in range(segment_start, segment_end):
-                        filtered_df = df[df['Frame'] == frame]
-                        if not filtered_df.empty:
-                            hist, _ = np.histogram(filtered_df[channel], bins=256, range=(0, 256), density=True)
-                            channel_histograms.append(hist)
-                    histograms[channel] = np.mean(channel_histograms, axis=0) if channel_histograms else np.zeros(256)
-                histogram_df = pd.DataFrame(histograms)
-                flattened = histogram_df.to_numpy().reshape(1, -1, order='F')
-                output_path = os.path.join(csv_path, f"{video_name}_{segment}_flattened.csv")
-                pd.DataFrame(flattened).to_csv(output_path, index=False, header=False)
-                output_paths[segment] = output_path
-            finally:
-                if os.path.exists(temp_csv):
-                    os.remove(temp_csv)
+            histograms = {ch: np.mean(vals, axis=0) if vals else np.zeros(256)
+                          for ch, vals in channel_histograms.items()}
+            histogram_df = pd.DataFrame(histograms)
+            flattened = histogram_df.to_numpy().reshape(1, -1, order='F')
+            output_path = os.path.join(csv_path, f"{video_name}_{segment}_flattened.csv")
+            pd.DataFrame(flattened).to_csv(output_path, index=False, header=False)
+            output_paths[segment] = output_path
         return video_name, output_paths
     except Exception as e:
         print(f"[Error] Failed on {video_name}: {e}")
