@@ -329,9 +329,8 @@ def generate_csv(video_path, csv_path, name):
                 if not ret:
                     break
                 
-                # Crop ROI and apply Gaussian Blur to reduce high-frequency sensor noise
+                # Crop ROI
                 roi = frame[roi_top:roi_bottom, roi_left:roi_right]
-                roi = cv2.GaussianBlur(roi, (7, 7), 0)
                 
                 roi_rgb  = cv2.cvtColor(roi, cv2.COLOR_BGR2RGB)
                 roi_hsv  = cv2.cvtColor(roi_rgb, cv2.COLOR_RGB2HSV)
@@ -402,7 +401,7 @@ def predict_lite(model, name, csv_path):
         output = model(x_red, x_orange, x_yellow)
         pred = output.item()
     print(f"Predicted Hemoglobin: {pred:.2f} g/dL")
-    return float(pred)  # Removed the hardcoded 1.2 scaling multiplier
+    return float(pred) 
 
 def display_on_lcd(pred, lcd):
     def safe_exit(signum, frame):
