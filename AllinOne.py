@@ -329,9 +329,9 @@ def generate_csv(video_path, csv_path, name):
                 if not ret:
                     break
                 
-                # Crop ROI
+                # Crop ROI and Gaussian blur
                 roi = frame[roi_top:roi_bottom, roi_left:roi_right]
-                
+                roi = cv2.GaussianBlur(roi, (7, 7), 0)
                 roi_rgb  = cv2.cvtColor(roi, cv2.COLOR_BGR2RGB)
                 roi_hsv  = cv2.cvtColor(roi_rgb, cv2.COLOR_RGB2HSV)
                 roi_lab  = cv2.cvtColor(roi_rgb, cv2.COLOR_RGB2LAB)
