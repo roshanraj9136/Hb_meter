@@ -10,8 +10,8 @@ import os
 from config_utils import load_config, save_config
 # Constants
 SWITCH_PIN = 23  # BCM GPIO pin number
-LOG_FILE = "/home/hbmeter1/Hb_meter/nishad_log.txt"
-SCRIPT_PATH = "/home/hbmeter1/Hb_meter/Nishad.py"
+LOG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nishad_log.txt")
+SCRIPT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Nishad.py")
 
 lcd = LCD()
 exit_flag = threading.Event()
@@ -22,7 +22,7 @@ def log(msg):
         f.write(f"[{time.ctime()}] {msg}\n")
 
 def upload_with_rclone(local_path, remote_folder, lcd=None):
-    local_path = '/home/hbmeter1/Hb_meter/'+local_path
+    local_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), local_path)
     try:
         if lcd:
             lcd.clear()
@@ -116,7 +116,7 @@ def show_ip(lcd, display_time=5):
 
 def button_callback():
     print("Button was pushed!")
-    command=f"python3 /home/hbmeter1/Hb_meter/Nishad.py"
+    command=f"python3 {os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Nishad.py')}"
     p=subprocess.run(command.split(" "))
     if p.returncode==0:
         print("Finished")

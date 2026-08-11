@@ -5,6 +5,6 @@
 sleep 10
 
 # Activate virtual environment
-source /home/hbmeter1/Nishad_env/bin/activate
+source $HOME/Nishad_env/bin/activate
 # Run the Python program
-python3 /home/hbmeter1/Hb_meter/nishad_switch.py
+python3 $HOME/Hb_meter/nishad_switch.py

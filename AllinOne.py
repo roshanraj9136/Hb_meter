@@ -1,4 +1,4 @@
-#!/home/hbmeter1/Hb_meter_env/bin/python
+#!/usr/bin/env python3
 
 import torch
 import torch.nn as nn
@@ -20,7 +20,7 @@ import logging
 logging.basicConfig(filename='nishad.log', level=logging.ERROR)
 
 # Change working directory
-os.chdir("/home/hbmeter1/Hb_meter/")
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def unique_file(basename, ext="mkv"):
     actualname = "%s.%s" % (basename, ext)

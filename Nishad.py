@@ -1,4 +1,4 @@
-#!/home/hbmeter1/Hb_meter_env/bin/python
+#!/usr/bin/env python3
 
 import os
 import time
@@ -117,7 +117,7 @@ def display_next(lcd):
         pass
 
 # Change directory and prepare paths
-os.chdir("/home/hbmeter1/Hb_meter/")
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 ensure_dirs(paths)
 
 name, record_path = unique_file(vid_path + "record")
@@ -226,4 +226,4 @@ mins, secs = divmod(total_time, 60)
 print(f"⏱️ Total time taken: {int(mins)} min {secs:.1f} sec")
 
 # Optional: Next process
-# subprocess.run(["python3", "/home/hbmeter1/Hb_meter/nishad_switch.py"])
+# subprocess.run(["python3", os.path.join(os.path.dirname(os.path.abspath(__file__)), "nishad_switch.py")])
